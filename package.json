@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/ReDBrother/project-lvl4-s109#readme",
   "dependencies": {
+    "autoprefixer": "*",
     "babel-cli": "*",
     "babel-core": "*",
     "babel-loader": "*",
@@ -61,6 +62,8 @@
     "koa-webpack": "*",
     "lodash": "*",
     "pg": "*",
+    "postcss": "*",
+    "postcss-loader": "*",
     "rollbar": "*",
     "sequelize": "*",
     "sqlite3": "*",
