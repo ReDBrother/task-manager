@@ -18,6 +18,7 @@ import methodOverride from 'koa-methodoverride';
 import getWebpackConfig from '../webpack.config.babel';
 import addRoutes from './controllers';
 import container from './container';
+import rollbar from './lib/rollbar';
 
 export default () => {
   const app = new Koa();
@@ -51,6 +52,7 @@ export default () => {
   addRoutes(router, container);
   app.use(router.allowedMethods());
   app.use(router.routes());
+  app.use(rollbar.errorHandler());
 
   const pug = new Pug({
     viewPath: path.join(__dirname, 'views'),
