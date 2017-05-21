@@ -5,4 +5,3 @@ flow-typed
 .tern-port
 *.sqlite
 public/assets
-/.env
