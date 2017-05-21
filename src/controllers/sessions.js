@@ -1,5 +1,5 @@
 import buildFormObj from '../lib/formObjectBuilder';
-import { encrypt } from '../lib/secure';
+import encrypt from '../lib/secure';
 
 export default (router, { User }) => {
   router
