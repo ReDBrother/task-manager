@@ -14,11 +14,14 @@ import session from 'koa-generic-session';
 import flash from 'koa-flash-simple';
 import _ from 'lodash';
 import methodOverride from 'koa-methodoverride';
+import dotenv from 'dotenv';
 
 import getWebpackConfig from '../webpack.config.babel';
 import addRoutes from './controllers';
 import container from './container';
 import rollbar from './lib/rollbar';
+
+dotenv.config();
 
 export default () => {
   const app = new Koa();

@@ -26,7 +26,7 @@ check-types:
 	npm run flow
 
 lint:
-	npm run eslint -- src test
+	npm run eslint -- src __test__
 
 publish:
 	npm publish

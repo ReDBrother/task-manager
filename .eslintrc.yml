@@ -9,5 +9,9 @@ env:
 
 parser: babel-eslint
 
+rules:
+  consistent-return: 0
+  no-underscore-dangle: 0
+
 extends:
   - 'airbnb-base'
