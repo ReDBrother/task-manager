@@ -1,6 +1,7 @@
 - const getInputName = (f, property) => `${f.name}[${property}]`
 
 mixin formFor(f, options = {})
+  h1.display-5.text-center.my-3= options['name']
   form(action=_.get(options, 'url') method=_.get(options, 'method', 'get'))
     block
 
