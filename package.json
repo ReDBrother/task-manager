@@ -77,6 +77,7 @@
     "eslint-config-airbnb-base": "*",
     "eslint-plugin-flowtype": "*",
     "eslint-plugin-import": "*",
+    "faker": "*",
     "flow-bin": "^0.46",
     "flow-typed": "*",
     "jest": "^20",
