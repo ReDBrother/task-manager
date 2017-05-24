@@ -4,7 +4,7 @@ mixin formFor(f, options = {})
   - const name = _.get(options, 'name')
   if name
     h1.display-5.text-center.my-3= name
-  form(action=_.get(options, 'url') method=_.get(options, 'method', 'get'))
+  form(class='simple_form' action=_.get(options, 'url') method=_.get(options, 'method', 'get'))
     block
 
 mixin input(f, property, options = { as: 'text' })
@@ -15,6 +15,6 @@ mixin input(f, property, options = { as: 'text' })
     if f.errors[property]
       .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')
 
-mixin button(f, type = 'submit')
+mixin button(f, text = 'Save', type = 'submit')
   .form-group
-    input(class='btn' type=`${type}` value=`Save`)
+    input(class='btn btn-primary-outline btn-success btn-block' type= `${type}` value=`${text}`)
