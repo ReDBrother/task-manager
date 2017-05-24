@@ -10,6 +10,15 @@ export default (router, { User }) => {
       const user = User.build();
       ctx.render('users/new', { f: buildFormObj(user) });
     })
+    .get('user', '/users/:id', async (ctx) => {
+      const id = Number(ctx.params.id);
+      const user = await User.findById(id);
+      if (user) {
+        ctx.render('users/info', { user });
+        return;
+      }
+      ctx.redirect(router.url('root'));
+    })
     .post('users', '/users', async (ctx) => {
       const form = ctx.request.body.form;
       const user = User.build(form);
