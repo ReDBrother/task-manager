@@ -1,0 +1,14 @@
+extends /layouts/application.pug
+
+block content
+  .row
+    .col-lg-7.col-12
+      +formFor(f, { name: 'Information', url: urlFor('account'), method: 'post' })
+        +input(f, 'firstName')
+        +input(f, 'lastName')
+        +input(f, 'email')
+        +button(f)
+      .text-center
+        a(href=urlFor('password')) Change password
+    include /account/sidebar.pug
+

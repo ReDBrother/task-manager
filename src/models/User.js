@@ -39,6 +39,12 @@ export default connect => connect.define('User', {
     fullName: function fullName() {
       return `${this.firstName} ${this.lastName}`;
     },
+    created: function created() {
+      return new Date(this.createdAt)
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, '');
+    },
   },
   freezeTableName: true, // Model tableName will be the same as the model name
 });

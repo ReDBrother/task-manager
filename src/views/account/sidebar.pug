@@ -1,0 +1,10 @@
+.col-lg-5.col-12.p-3
+  h4.lead.my-3 My account
+  p.mt-2.mb-3= 'Full Name: '
+    strong
+      a(href=urlFor('user', { id: user.id }))= user.fullName
+  p.mt-2.mb-3= 'Email: ' + user.email
+  p.mt-2.mb-3= 'Created: ' + user.created
+  p.mt-2.mb-3
+    a.text-danger(href=urlFor('account') data-method='delete' rel='nofollow') Delete my account
+
