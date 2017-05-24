@@ -27,6 +27,7 @@ export default () => {
   const app = new Koa();
 
   app.keys = ['some secret hurr'];
+
   app.use(session(app));
   app.use(flash());
   app.use(async (ctx, next) => {
@@ -55,7 +56,9 @@ export default () => {
   addRoutes(router, container);
   app.use(router.allowedMethods());
   app.use(router.routes());
-  app.use(rollbar.errorHandler());
+  if (process.env.NODE_ENV !== 'test') {
+    app.use(rollbar.errorHandler());
+  }
 
   const pug = new Pug({
     viewPath: path.join(__dirname, 'views'),
