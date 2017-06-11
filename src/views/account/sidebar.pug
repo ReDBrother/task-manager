@@ -6,5 +6,5 @@
   p.mt-2.mb-3= 'Email: ' + user.email
   p.mt-2.mb-3= 'Created: ' + user.created
   p.mt-2.mb-3
-    a.text-danger(href=urlFor('account') data-method='delete' rel='nofollow') Delete my account
+    a.text-danger(href=urlFor('account') data-method='delete' data-confirm='Are you sure you want to delete you account?' rel='nofollow') Delete my account
 

@@ -1,25 +1,16 @@
 import buildFormObj from '../lib/formObjectBuilder';
 import encrypt from '../lib/secure';
+import requiredAuth from '../lib/requiredAuth';
 
 export default (router, { User }) => {
   router
-    .get('account', '/my/account', async (ctx) => {
+    .get('account', '/my/account', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
-      if (!id) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
       const user = await User.findById(id);
       ctx.render('account', { f: buildFormObj(user), user });
     })
-    .post('account', '/my/account', async (ctx) => {
+    .post('account', '/my/account', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
-      if (!id) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
       const user = await User.findById(id);
       const form = ctx.request.body.form;
       try {
@@ -30,23 +21,13 @@ export default (router, { User }) => {
         ctx.render('account', { f: buildFormObj(form, e), user });
       }
     })
-    .get('password', '/my/password', async (ctx) => {
+    .get('password', '/my/password', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
-      if (!id) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
       const user = await User.findById(id);
       ctx.render('account/password', { f: buildFormObj({}), user });
     })
-    .post('password', '/my/password', async (ctx) => {
+    .post('password', '/my/password', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
-      if (!id) {
-        ctx.redirect(router.url('newSession'));
-        return;
-      }
-
       const user = await User.findById(id);
       const { password,
         newPassword,

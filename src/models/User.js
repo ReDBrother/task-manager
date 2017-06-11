@@ -1,4 +1,5 @@
 import Sequelize from 'sequelize';
+import moment from 'moment';
 import encrypt from '../lib/secure';
 
 export default connect => connect.define('User', {
@@ -40,10 +41,8 @@ export default connect => connect.define('User', {
       return `${this.firstName} ${this.lastName}`;
     },
     created: function created() {
-      return new Date(this.createdAt)
-        .toISOString()
-        .replace(/T/, ' ')
-        .replace(/\..+/, '');
+      return moment(this.createdAt)
+        .format('MMMM Do YYYY, h:mm:ss a');
     },
   },
   freezeTableName: true, // Model tableName will be the same as the model name

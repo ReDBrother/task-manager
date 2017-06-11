@@ -3,34 +3,16 @@ import matchers from 'jest-supertest-matchers';
 import faker from 'faker';
 
 import app from '../src';
-import connect from '../src/db';
-import getUser from '../src/models/User';
-import encrypt from '../src/lib/secure';
 
 describe('requests', () => {
-  const User = getUser(connect);
-  const hasUser = async (info) => {
-    const user = await User.findOne({
-      where: {
-        email: info.email,
-        firstName: info.firstName,
-        lastName: info.lastName,
-        passwordDigest: encrypt(info.password),
-      },
-    });
-
-    return user !== null;
-  };
-
   let server;
 
-  let email;
   let firstName;
   let lastName;
+  let email;
   let password;
 
-  beforeAll(async () => {
-    await User.destroy({ where: {} });
+  beforeAll(() => {
     jasmine.addMatchers(matchers);
 
     email = faker.internet.email();
@@ -52,11 +34,14 @@ describe('requests', () => {
       .get('/users/new');
     const res4 = await request.agent(server)
       .get('/session/new');
+    const res5 = await request.agent(server)
+      .get('/tasks');
 
     expect(res1).toHaveHTTPStatus(200);
     expect(res2).toHaveHTTPStatus(200);
     expect(res3).toHaveHTTPStatus(200);
     expect(res4).toHaveHTTPStatus(200);
+    expect(res5).toHaveHTTPStatus(200);
   });
 
   it('GET 302', async () => {
@@ -64,21 +49,11 @@ describe('requests', () => {
       .get('/my/account');
     const res2 = await request.agent(server)
       .get('/my/password');
-
+    const res3 = await request.agent(server)
+      .get('/tasks/new');
     expect(res1).toHaveHTTPStatus(302);
     expect(res2).toHaveHTTPStatus(302);
-  });
-
-  it('Sign Up', async () => {
-    const form = { email, firstName, lastName, password };
-    const res = await request.agent(server)
-      .post('/users')
-      .send({ form });
-    expect(res).toHaveHTTPStatus(302);
-
-    const count = await User.count();
-    expect(count).toBe(1);
-    expect(await hasUser(form)).toBe(true);
+    expect(res3).toHaveHTTPStatus(302);
   });
 
   it('Sign In', async () => {
@@ -95,7 +70,15 @@ describe('requests', () => {
     const res = await request.agent(server)
       .post('/session')
       .send({ form });
-    expect(res).toHaveHTTPStatus(200);
+    expect(res).toHaveHTTPStatus(302);
+  });
+
+  it('Sign up', async () => {
+    const form = { email, firstName, lastName, password };
+    const res = await request.agent(server)
+      .post('/users')
+      .send({ form });
+    expect(res).toHaveHTTPStatus(302);
   });
 
   it('Sign Out', async () => {
@@ -107,9 +90,5 @@ describe('requests', () => {
   afterEach((done) => {
     server.close();
     done();
-  });
-
-  afterAll(async () => {
-    await User.destroy({ where: {} });
   });
 });
