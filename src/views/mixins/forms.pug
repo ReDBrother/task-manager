@@ -1,4 +1,4 @@
-- const getInputName = (f, property) => `${f.name}[${property}]`
+- const getInputName = (f, property, name) => !name ? `${f.name}[${property}]` : name;
 
 mixin formFor(f, options = {})
   - const name = _.get(options, 'name')
@@ -11,7 +11,28 @@ mixin input(f, property, options = { as: 'text' })
   - const value = f.object[property] === undefined ? '' : f.object[property]
   .form-group(class=(f.errors[property] && 'has-danger'))
     label= property
-    input(name=getInputName(f, property) class='form-control' type=options['as'] value=`${value}`)
+    input(name=getInputName(f, property, options.name) class='form-control' type=options['as'] value=`${value}`)
+    if f.errors[property]
+      .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')
+
+mixin select(f, property, options = { items: [], selectId: 0 })
+  - const value = f.object[property] === undefined ? '' : f.object[property]
+  .form-group(class=(f.errors[property] && 'has-danger'))
+    label= property
+    select(name=getInputName(f, property, options.name) class='form-control select required')
+      each item in options.items
+        if (options.selectId == item.id)
+          option(selected value=item.id)= item.name
+        else
+          option(value=item.id)= item.name
+    if f.errors[property]
+      .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')
+
+mixin textarea(f, property, options = { text: '' })
+  - const value = f.object[property] === undefined ? '' : f.object[property]
+  .form-group(class=(f.errors[property] && 'has-danger'))
+    lable= property
+    textarea(name=getInputName(f, property, options.name) class='form-control text optional')= value
     if f.errors[property]
       .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')
 

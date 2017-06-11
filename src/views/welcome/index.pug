@@ -6,3 +6,7 @@ block head
 block content
   .row.justify-content-center.mt-4.mb-4
     h3.text-center Welcome to Task Manager!
+  if isSignedIn()
+    .row.justify-content-center.jumbotron
+      a.btn.btn-lg.btn-success.m-4(href=urlFor('newTask')) Сreate Task
+      a.btn.btn-lg.btn-success.m-4(href=urlFor('tasks')) Search Task
