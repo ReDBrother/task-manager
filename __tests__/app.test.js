@@ -36,12 +36,14 @@ describe('requests', () => {
       .get('/session/new');
     const res5 = await request.agent(server)
       .get('/tasks');
-
+    const res6 = await request.agent(server)
+      .get('/statuses');
     expect(res1).toHaveHTTPStatus(200);
     expect(res2).toHaveHTTPStatus(200);
     expect(res3).toHaveHTTPStatus(200);
     expect(res4).toHaveHTTPStatus(200);
     expect(res5).toHaveHTTPStatus(200);
+    expect(res6).toHaveHTTPStatus(200);
   });
 
   it('GET 302', async () => {
@@ -51,9 +53,12 @@ describe('requests', () => {
       .get('/my/password');
     const res3 = await request.agent(server)
       .get('/tasks/new');
+    const res4 = await request.agent(server)
+      .get('/statuses/new');
     expect(res1).toHaveHTTPStatus(302);
     expect(res2).toHaveHTTPStatus(302);
     expect(res3).toHaveHTTPStatus(302);
+    expect(res4).toHaveHTTPStatus(302);
   });
 
   it('Sign In', async () => {

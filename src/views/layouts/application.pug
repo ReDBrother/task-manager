@@ -18,12 +18,15 @@ html(lang="en")
             a.nav-link(href=urlFor('users')) Users
           li.nav-item.active
             a.nav-link(href=urlFor('tasks')) Tasks
+          li.nav-item.active
+            a.nav-link(href=urlFor('statuses')) Statuses
         ul.navbar-nav
           if isSignedIn()
             .dropdown
               a.dropdown-toggle.nav-link(aria-expanded='false' data-toggle='dropdown' href='#') My account
               .dropdown-menu.dropdown-menu-right
                 a.dropdown-item.ml-0(href=urlFor('newTask')) Create Task
+                a.dropdown-item.ml-0(href=urlFor('newStatus')) Create Status
                 a.dropdown-item.ml-0(href=urlFor('account')) Settings
                 .dropdown-divider
                 a.dropdown-item.ml-0(href=urlFor('session') data-method='delete' rel='nofollow') Sign Out

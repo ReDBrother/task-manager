@@ -1,0 +1,17 @@
+extends /layouts/application.pug
+
+block head
+  title TaskStatuses
+
+block content
+  table.table.table-stripped
+    thead
+      tr
+        th Id
+        th Name
+    tbody
+      each status in statuses
+        tr
+          td= status.id
+          td
+            a.no-color(href=`/statuses/${status.id}`)= status.name
