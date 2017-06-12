@@ -9,9 +9,12 @@ block content
       tr
         th Id
         th Name
+        th Edit
     tbody
       each status in statuses
         tr
           td= status.id
+          td= status.name
           td
-            a.no-color(href=`/statuses/${status.id}`)= status.name
+            a.no-color(href=urlFor('editStatus', status.id)) edit
+

@@ -3,7 +3,7 @@ extends /layouts/application.pug
 block content
   .row
     .col-lg-7.col-12
-      +formFor(f, { name: 'Create Task', url: urlFor('newTask'), method: 'post' })
+      +formFor(f, { name: 'Create Task', url: urlFor('tasks'), method: 'post' })
         +input(f, 'name')
         +select(f, 'status', { items: statuses, selectId: 1 })
         +select(f, 'assignedTo', { items: userItems, selectId: id })

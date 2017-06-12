@@ -6,7 +6,7 @@ import requiredAuth from '../lib/requiredAuth';
 const getUserItems = async (User, id) => {
   const users = await User.findAll();
   return users.map((user) => {
-    if (user.id === id) {
+    if (id && user.id === id) {
       return { id: user.id, name: '<< me >>' };
     }
 
@@ -35,18 +35,6 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
   router
     .get('tasks', '/tasks', async (ctx) => {
       const id = ctx.session.userId;
-      const tasks = await Task.findAll();
-      if (id) {
-        const userItems = [{ id: 0, name: 'all' }, ...await getUserItems(User, id)];
-        const statuses = [{ id: 0, name: 'all' }, ...await TaskStatus.findAll()];
-        ctx.render('tasks', { f: buildFormObj({}), tasks, userItems, statuses });
-        return;
-      }
-
-      ctx.render('tasks', { tasks });
-    })
-    .get('search', '/search', requiredAuth, async (ctx) => {
-      const id = ctx.session.userId;
       const { query } = url.parse(ctx.request.url, true);
       const filters = getFilters(query);
       const tasks = await Task.findAll({
@@ -59,7 +47,8 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
       });
       const userItems = [{ id: 0, name: 'all' }, ...await getUserItems(User, id)];
       const statuses = [{ id: 0, name: 'all' }, ...await TaskStatus.findAll()];
-      ctx.render('tasks', { f: buildFormObj({}), tasks, userItems, statuses });
+
+      ctx.render('tasks', { f: buildFormObj(query), tasks, userItems, statuses });
     })
     .get('newTask', '/tasks/new', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
@@ -68,7 +57,7 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
       const task = Task.build();
       ctx.render('tasks/new', { f: buildFormObj(task), id, userItems, statuses });
     })
-    .post('newTask', '/tasks/new', requiredAuth, async (ctx) => {
+    .post('tasks', '/tasks', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const form = ctx.request.body.form;
       try {
@@ -80,7 +69,7 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
           assignedToId: form.assignedTo,
         });
         ctx.flash.set('Task has been created');
-        ctx.redirect(router.url('newTask'));
+        ctx.redirect(router.url('tasks'));
       } catch (e) {
         const userItems = await getUserItems(User, id);
         const statuses = await TaskStatus.findAll();
@@ -106,7 +95,7 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
       const tag = Tag.build();
       ctx.render('tasks/info', { f: buildFormObj(tag), task, creator, status, assigned, tags });
     })
-    .post('tag', '/tasks/:id', requiredAuth, async (ctx) => {
+    .post('tags', '/tasks/:id', requiredAuth, async (ctx) => {
       const taskId = Number(ctx.params.id);
       const task = await Task.findById(taskId);
       if (!task) {
@@ -123,9 +112,9 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
         ctx.flash.set('Name is no valid');
       }
 
-      ctx.redirect(`/tasks/${taskId}`);
+      ctx.redirect(router.url('task', taskId));
     })
-    .get('/tasks/:id/config/', requiredAuth, async (ctx) => {
+    .get('editTask', '/tasks/:id/edit', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const taskId = Number(ctx.params.id);
       const task = await Task.findById(taskId);
@@ -136,14 +125,14 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
       const userItems = await getUserItems(User, id);
       const statuses = await TaskStatus.findAll();
 
-      ctx.render('tasks/config', { f: buildFormObj(task), task, userItems, statuses });
+      ctx.render('tasks/edit', { f: buildFormObj(task), task, userItems, statuses });
     })
-    .post('/tasks/:id/config', requiredAuth, async (ctx) => {
+    .patch('updateTask', '/tasks/:id/edit', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const taskId = Number(ctx.params.id);
       const task = await Task.findById(taskId);
       if (!task) {
-        ctx.reditect(router.url('tasks'));
+        ctx.redirect(router.url('tasks'));
         return;
       }
 
@@ -157,17 +146,17 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
         });
 
         ctx.flash.set('task has been updated');
-        ctx.redirect(`/tasks/${taskId}/config`);
+        ctx.redirect(router.url('editTask', taskId));
       } catch (e) {
         const userItems = await getUserItems(User, id);
         const statuses = await TaskStatus.findAll();
-        ctx.render('tasks/config', { f: buildFormObj(form, e), task, userItems, statuses });
+        ctx.render('tasks/edit', { f: buildFormObj(form, e), task, userItems, statuses });
       }
     })
-    .delete('/tasks/:id', requiredAuth, async (ctx) => {
+    .delete('destroyTask', '/tasks/:id', requiredAuth, async (ctx) => {
       const taskId = Number(ctx.params.id);
       await Task.destroy({ where: { id: taskId } });
       ctx.flash.set('Task has been destroy');
-      ctx.redirect(router.url('root'));
+      ctx.redirect(router.url('tasks'));
     });
 };

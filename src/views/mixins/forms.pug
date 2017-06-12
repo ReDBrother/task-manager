@@ -16,12 +16,12 @@ mixin input(f, property, options = { as: 'text' })
       .form-control-feedback= f.errors[property].map(({ message }) => message).join('. ')
 
 mixin select(f, property, options = { items: [], selectId: 0 })
-  - const value = f.object[property] === undefined ? '' : f.object[property]
+  - const value = f.object[property] === undefined ? options.selectId : f.object[property]
   .form-group(class=(f.errors[property] && 'has-danger'))
     label= property
     select(name=getInputName(f, property, options.name) class='form-control select required')
       each item in options.items
-        if (options.selectId == item.id)
+        if (value == item.id)
           option(selected value=item.id)= item.name
         else
           option(value=item.id)= item.name

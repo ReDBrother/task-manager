@@ -9,7 +9,7 @@ export default (router, { User }) => {
       const user = await User.findById(id);
       ctx.render('account', { f: buildFormObj(user), user });
     })
-    .post('account', '/my/account', requiredAuth, async (ctx) => {
+    .patch('account', '/my/account', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findById(id);
       const form = ctx.request.body.form;
@@ -26,7 +26,7 @@ export default (router, { User }) => {
       const user = await User.findById(id);
       ctx.render('account/password', { f: buildFormObj({}), user });
     })
-    .post('password', '/my/password', requiredAuth, async (ctx) => {
+    .patch('password', '/my/password', requiredAuth, async (ctx) => {
       const id = ctx.session.userId;
       const user = await User.findById(id);
       const { password,

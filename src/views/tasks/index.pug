@@ -4,31 +4,32 @@ block head
   title Tasks
 
 block content
-  .panel.panel-default
-    .panel-heading= Tasks
-    .panel-body
-      if isSignedIn()
-        +formFor(f, { name: 'Filters', url: urlFor('search'), method: 'get'})
-          .d-inline-block
-            +select(f, 'creator', { name: 'creator', items: userItems })
-          .d-inline-block
-            +input(f, 'tag', { name: 'tag', as: 'text'})
-          .d-inline-block
-            +select(f, 'status', { name: 'status', items: statuses })
-          .d-inline-block
-            +select(f, 'assignedTo', { name: 'assignedTo', items: userItems })
-          .d-inline-block
-            +button(f, 'Search')
+  .row
+    +formFor(f, { url: urlFor('tasks'), method: 'get'})
+      .d-inline-block
+        +select(f, 'creator', { name: 'creator', items: userItems })
+      .d-inline-block
+        +input(f, 'tag', { name: 'tag', as: 'text'})
+      .d-inline-block
+        +select(f, 'status', { name: 'status', items: statuses })
+      .d-inline-block
+        +select(f, 'assignedTo', { name: 'assignedTo', items: userItems })
+      .d-inline-block
+        +button(f, 'Search')
     table.table.table-stripped
       thead
         tr
           th name
           th Description
+          th Status
+          th Assigned to
           th Created At
       tbody
         each task in tasks
           tr
             td
-              a.no-color(href=`/tasks/${task.id}`)= task.name
+              a.no-color(href=urlFor('task', task.id))= task.name
             td= task.description
+            td= _.find(statuses, { id: task.statusId }).name
+            td= task.assignedToId ? _.find(userItems, { id: task.assignedToId }).name : ''
             td= task.created

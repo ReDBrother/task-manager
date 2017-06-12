@@ -38,9 +38,9 @@ export default () => {
     await next();
   });
   app.use(bodyParser());
-  app.use(methodOverride((req) => {
+  app.use(methodOverride((req) => { // eslint-disable-line consistent-return
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-      return req.body._method;
+      return req.body._method;// eslint-disable-line no-underscore-dangle
     }
   }));
   app.use(serve(path.join(__dirname, '..', 'public')));

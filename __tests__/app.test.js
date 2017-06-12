@@ -61,6 +61,14 @@ describe('requests', () => {
     expect(res4).toHaveHTTPStatus(302);
   });
 
+  it('Sign up', async () => {
+    const form = { email, firstName, lastName, password };
+    const res = await request.agent(server)
+      .post('/users')
+      .send({ form });
+    expect(res).toHaveHTTPStatus(302);
+  });
+
   it('Sign In', async () => {
     const form = { email, password };
     const res = await request.agent(server)
@@ -75,15 +83,7 @@ describe('requests', () => {
     const res = await request.agent(server)
       .post('/session')
       .send({ form });
-    expect(res).toHaveHTTPStatus(302);
-  });
-
-  it('Sign up', async () => {
-    const form = { email, firstName, lastName, password };
-    const res = await request.agent(server)
-      .post('/users')
-      .send({ form });
-    expect(res).toHaveHTTPStatus(302);
+    expect(res).toHaveHTTPStatus(200);
   });
 
   it('Sign Out', async () => {

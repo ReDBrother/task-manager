@@ -11,16 +11,16 @@ block content
         p.mt-2.mb-3= 'Assigned to: ' + assigned.fullName
       if isSignedIn()
         p.mt-2.mb-3
-          a(href=`/tasks/${task.id}/config`) Config Task
+          a(href=urlFor('editTask', task.id)) Edit Task
         p.mt-2.mb-3
-          a.text-danger(href=`/tasks/${task.id}` data-method='delete' data-confirm='Are you sure you want to delete this task and all its tags?' rel='nofollow') Delete Task
+          a.text-danger(href=urlFor('destroyTask', task.id) data-method='delete' data-confirm='Are you sure you want to delete this task and all its tags?' rel='nofollow') Delete Task
     .col-lg-5.col-12.p-3
       h4.lead.my-3 Tags:
       each tag, index in tags
         p.mt-2.mb-3= `${index + 1} ${tag.name}`
       if isSignedIn()
         p.mt-2.mb-3.text-center= 'Add Tag'
-        +formFor(f, { url: `/tasks/${task.id}`, method: 'post' })
+        +formFor(f, { url: urlFor('tags', task.id), method: 'post' })
           +input(f, 'name')
           +button(f)
 

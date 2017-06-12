@@ -36,7 +36,7 @@ html(lang="en")
             li.nav-item
               a.nav-link(href=urlFor('newUser')) Sign Up
     .container.py-2
-      - const msg = flash.get()
+      - const msg = flash.get() || errMsg
       if msg
         .alert.alert-info.m-3= msg
           button.close(aria-hidden='true' data-dismiss='alert') ×

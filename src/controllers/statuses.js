@@ -11,17 +11,17 @@ export default (router, { TaskStatus }) => {
       const status = TaskStatus.build();
       ctx.render('statuses/new', { f: buildFormObj(status) });
     })
-    .post('newStatus', '/statuses/new', requiredAuth, async (ctx) => {
+    .post('statuses', '/statuses', requiredAuth, async (ctx) => {
       const form = ctx.request.body.form;
       try {
         await TaskStatus.create(form);
         ctx.flash.set('Status has been created');
-        ctx.redirect(router.url('newStatus'));
+        ctx.redirect(router.url('statuses'));
       } catch (e) {
         ctx.render('statuses/new', { f: buildFormObj(form, e) });
       }
     })
-    .get('status', '/statuses/:id', requiredAuth, async (ctx) => {
+    .get('editStatus', '/statuses/:id/edit', requiredAuth, async (ctx) => {
       const statusId = Number(ctx.params.id);
       const status = await TaskStatus.findById(statusId);
       if (!status) {
@@ -29,9 +29,9 @@ export default (router, { TaskStatus }) => {
         return;
       }
 
-      ctx.render('statuses/config', { f: buildFormObj(status), statusId });
+      ctx.render('statuses/edit', { f: buildFormObj(status), statusId });
     })
-    .post('/statuses/:id', requiredAuth, async (ctx) => {
+    .patch('updateStatus', '/statuses/:id', requiredAuth, async (ctx) => {
       const statusId = Number(ctx.params.id);
       const status = await TaskStatus.findById(statusId);
       if (!status) {
@@ -43,15 +43,15 @@ export default (router, { TaskStatus }) => {
       try {
         await status.update(form);
         ctx.flash.set('Status has been updated');
-        ctx.redirect(`/statuses/${statusId}`);
+        ctx.redirect(router.url('editStatus', statusId));
       } catch (e) {
-        ctx.render('statuses/config', { f: buildFormObj(form, e), statusId });
+        ctx.render('statuses/edit', { f: buildFormObj(form, e), statusId });
       }
     })
-    .delete('/statuses/:id', requiredAuth, async (ctx) => {
+    .delete('destroyStatus', '/statuses/:id', requiredAuth, async (ctx) => {
       const statusId = Number(ctx.params.id);
       await TaskStatus.destroy({ where: { id: statusId } });
       ctx.flash.set('Status has been destroy');
-      ctx.redirect(router.url('root'));
+      ctx.redirect(router.url('statuses'));
     });
 };
