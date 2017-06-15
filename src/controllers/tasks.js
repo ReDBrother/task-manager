@@ -105,8 +105,10 @@ export default (router, { User, TaskStatus, Task, Tag }) => {
 
       const form = ctx.request.body.form;
       try {
-        const tag = await Tag.create(form);
-        await task.addTag(tag);
+        await Tag.findOrCreate({ where: form })
+          .spread(async (tag) => {
+            await task.addTag(tag);
+          });
         ctx.flash.set('Tag has been created');
       } catch (e) {
         ctx.flash.set('Name is no valid');
